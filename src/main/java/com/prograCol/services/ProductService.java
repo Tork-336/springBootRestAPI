@@ -2,14 +2,22 @@ package com.prograCol.services;
 
 import com.prograCol.repository.CategoryRepository;
 import com.prograCol.repository.ProductRepository;
-import com.prograCol.repository.entitys.Category;
-import com.prograCol.repository.entitys.Product;
+import com.prograCol.repository.dto.FilterDTO;
+import com.prograCol.repository.entities.Category;
+import com.prograCol.repository.entities.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -26,6 +34,22 @@ public class ProductService {
         Iterator<Product> products = productRepository.findAll().iterator();
         while (products.hasNext()) {
             retorno.add(products.next());
+        }
+        return retorno;
+    }
+
+    public List<Product> getFilter(FilterDTO filter) {
+        List<Product> retorno = new ArrayList<>(0);
+        switch (filter.getName()) {
+            case "name":
+                retorno = productRepository.findAllByName(filter.getValue());
+                break;
+            case "price":
+                retorno = productRepository.findAllByPriceMenor(filter.getValue());
+                break;
+            case "nameFirts":
+                retorno = productRepository.findAllByNameFirst(filter.getValue());
+                break;
         }
         return retorno;
     }

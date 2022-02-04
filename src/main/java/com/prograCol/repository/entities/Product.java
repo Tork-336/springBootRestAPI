@@ -1,5 +1,8 @@
-package com.prograCol.repository.entitys;
+package com.prograCol.repository.entities;
 
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +12,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "product")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Product {
 
     @Id
@@ -24,7 +30,7 @@ public class Product {
     private String name;
     @Column(name = "price")
     private Long price;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany()
     @JoinTable(
             name = "product_category",
             joinColumns = {@JoinColumn(name = "id_product", referencedColumnName = "id")},

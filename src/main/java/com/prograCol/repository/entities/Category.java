@@ -1,10 +1,16 @@
-package com.prograCol.repository.entitys;
+package com.prograCol.repository.entities;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "category")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Category {
 
     @Id
@@ -14,7 +20,7 @@ public class Category {
     private String description;
     @Column(name = "name")
     private String name;
-    @ManyToMany(mappedBy = "categorySet", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "categorySet")
     private Set<Product> productSet;
 
     public Category() {

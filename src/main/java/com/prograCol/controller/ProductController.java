@@ -1,11 +1,19 @@
 package com.prograCol.controller;
 
-import com.prograCol.repository.entitys.Product;
+import com.prograCol.repository.dto.FilterDTO;
+import com.prograCol.repository.entities.Product;
 import com.prograCol.services.ProductService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +41,16 @@ public class ProductController {
         }
     }
 
-
+    @PostMapping(value = "/product/filter")
+    @ResponseBody
+    public Map<String, Object> filterProduct(@RequestBody FilterDTO filter) {
+        try {
+            return UtilResponse.mapOk(productService.getFilter(filter));
+        } catch (Exception e) {
+            LOG.error("  ProductController  ->  filterProduct  Fallo: ", e);
+            return UtilResponse.mapError("Ocurrio un error!: " + e.getMessage());
+        }
+    }
 
     @PostMapping(value = "/product")
     @ResponseBody
