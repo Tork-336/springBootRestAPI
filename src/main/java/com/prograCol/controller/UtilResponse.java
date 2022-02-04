@@ -21,10 +21,18 @@ public class UtilResponse {
         return retorno;
     }
 
-    public static Map<String, Object> mapError (String messagge) {
+    public static Map<String, Object> mapError (String message) {
         Map<String, Object> retorno = new HashMap<>(0);
-        retorno.put("message", messagge);
+        retorno.put("message", message);
         retorno.put("success", false);
+        return retorno;
+    }
+
+    public static Map<String, Object> mapError (String message, List data) {
+        Map<String, Object> retorno = new HashMap<>(0);
+        retorno.put("data", data);
+        retorno.put("message", message);
+        retorno.put("success", true);
         return retorno;
     }
 }
