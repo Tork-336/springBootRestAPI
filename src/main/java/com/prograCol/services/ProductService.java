@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -66,6 +67,8 @@ public class ProductService {
     public List<Product> create(List<Product> products) {
         int indexSaveProducts = 0;
         products.stream().forEach(product -> {
+            product.setCreationDate(LocalDateTime.now());
+            product.setExpiryDate(LocalDateTime.now());
             if (!product.getCategorySet().isEmpty()) {
                 product.setCategorySet(findCategoryToPersistProduct(product));
             }

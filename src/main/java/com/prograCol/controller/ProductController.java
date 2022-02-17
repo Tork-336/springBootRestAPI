@@ -1,11 +1,13 @@
 package com.prograCol.controller;
 
 import com.prograCol.repository.dto.FilterDTO;
+import com.prograCol.repository.dto.RequestProductDTO;
 import com.prograCol.repository.entities.Product;
 import com.prograCol.services.ProductService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(value = "*")
 @RestController()
 public class ProductController {
 
@@ -54,9 +57,9 @@ public class ProductController {
 
     @PostMapping(value = "/product")
     @ResponseBody
-    public Map<String, Object> createProduct (@RequestBody List<Product> products) {
+    public Map<String, Object> createProduct (@RequestBody RequestProductDTO body) {
         try {
-            List<Product> insertProduct = productService.create(products);
+            List<Product> insertProduct = productService.create(body.getProducts());
             if (insertProduct.size() > 0) {
                 return UtilResponse.mapError(" Error insertando los registros", insertProduct);
             } else {

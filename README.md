@@ -45,7 +45,7 @@ valo "false".
 <br/>
 #### Obtener productos
 
-TIPO: GET
+TIPO: GET<br/>
 URL: "http://host-name/product?page=3&size=3&all=false"
 Parametros: page, size y all
 
@@ -64,19 +64,21 @@ Es posible enviar un array de JSON para crear registros por lotes.
 body:
 
 ```
-[
-    {
-        "description": "Producto013", 
-        "expiryDate":"", 
-        "name": "Producto013", 
-        "price": 376.000,
-        "categorySet":[
-            {
-                "id": 1
-            }
-        ]
-    }
-]
+{
+    "products":[
+        {
+            "description": "Producto013", 
+            "expiryDate":"", 
+            "name": "Producto013", 
+            "price": 376.000,
+            "categorySet":[
+                {
+                    "id": 1
+                }
+            ]
+        }
+    ]
+}
 ```
 <br/>
 
