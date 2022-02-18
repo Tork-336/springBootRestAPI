@@ -73,9 +73,9 @@ public class ProductController {
 
     @PutMapping(value = "/product")
     @ResponseBody
-    public Map<String, Object> updateProduct(@RequestBody List<Product> products) {
+    public Map<String, Object> updateProduct(@RequestBody RequestProductDTO body) {
         try {
-            List<Product> updateProduct = productService.update(products);
+            List<Product> updateProduct = productService.update(body.getProducts());
             if (updateProduct.size() > 0) {
                 return UtilResponse.mapError(" Error actualizando los registros", updateProduct);
             } else {
@@ -89,9 +89,9 @@ public class ProductController {
 
     @DeleteMapping(value = "/product")
     @ResponseBody
-    public Map<String, Object> deteleteProduct(@RequestBody List<Product> products) {
+    public Map<String, Object> deteleteProduct(@RequestBody RequestProductDTO body) {
         try {
-            if (productService.delete(products)) {
+            if (productService.delete(body.getProducts())) {
                 return UtilResponse.mapOk(new ArrayList(0));
             }
             return UtilResponse.mapOk(new ArrayList(0));
