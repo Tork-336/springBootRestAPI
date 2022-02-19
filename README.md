@@ -91,16 +91,18 @@ El siguiente endpoind permite actualizar, enviado un body en formato JSON del re
 Es posible enviar un array de JSON para crear registros por lotes.
 
 ````
-[
-    {
-        "id": 5,
-        "description": "Producto005 - Ha cambiado...!! ", 
-        "creationDate": "2022-02-03T22:04:57" ,
-        "expiryDate":"", 
-        "name": "Producto005", 
-        "price": 107
-    }
-]
+{
+    "products":[
+        {
+            "id": 5,
+            "description": "Producto005 - Ha cambiado...!! ", 
+            "creationDate": "2022-02-03T22:04:57" ,
+            "expiryDate":"", 
+            "name": "Producto005", 
+            "price": 107
+        }
+    ]
+}
 ````
 <br/>
 <br/>
@@ -114,9 +116,11 @@ El siguiente endpoind permite eliminar, enviado un body en formato JSON del regi
 Es posible enviar un array de JSON para crear registros por lotes.
 
 ````
-[
-    {"id": 15}
-]
+{
+    "products":[
+        {"id": 15}
+    ]
+}
 ````
 <br/>
 
