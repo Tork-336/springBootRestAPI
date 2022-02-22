@@ -101,20 +101,7 @@ public class ProductService {
     }
 
     public List<Product> update(List<Product> products) {
-        List<Product> updateProducts = new ArrayList<>(0);
-        int indexSaveProducts = 0;
-        Iterator<Product> currentProductUpdates = productRepository.findAllById(products.stream().map(product -> product.getId()).collect(Collectors.toList())).iterator();
-        while (currentProductUpdates.hasNext()) {
-            Product updateProduct = products.stream().filter(product -> product.getId().equals(currentProductUpdates.next().getId())).findAny().get();
-            Product currentData = products.stream().filter(product -> product.getId().equals(updateProduct.getId())).findAny().get();
-            updateProduct.setCreationDate(currentData.getCreationDate());
-            updateProduct.setDescription(currentData.getDescription());
-            updateProduct.setExpiryDate(currentData.getExpiryDate());
-            updateProduct.setName(currentData.getName());
-            updateProduct.setPrice(currentData.getPrice());
-            updateProducts.add(updateProduct);
-        }
-        return create(updateProducts);
+        return create(products);
     }
 
     public boolean delete(List<Product> products) {
