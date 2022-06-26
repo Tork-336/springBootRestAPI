@@ -35,7 +35,7 @@ public class Product {
             name = "product_category",
             joinColumns = {@JoinColumn(name = "id_product", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "id_category", referencedColumnName = "id")})
-    private Set<Category> categorySet = new HashSet<>();
+    private Set<Category> categories = new HashSet<>();
 
     public Product() {
     }
@@ -103,11 +103,11 @@ public class Product {
         this.price = price;
     }
 
-    public Set getCategorySet() {
-        return categorySet;
+    public Set getCategories() {
+        return categories;
     }
 
-    public void setCategorySet(Set categorySet) {
-        this.categorySet = categorySet;
+    public void setCategories(Set categories) {
+        this.categories = categories;
     }
 }

@@ -1,11 +1,15 @@
 package com.prograCol.repository.dto;
 
-public class FilterDTO {
+import javax.validation.constraints.NotBlank;
 
+public class FilterDto {
+
+    @NotBlank(message = "Debe enviar una propiedad a filtrar.")
     private String name;
+    @NotBlank(message = "Debe enviar el valor de propiedad a filtrar.")
     private String value;
 
-    public FilterDTO() {
+    public FilterDto() {
     }
 
     public String getName() {

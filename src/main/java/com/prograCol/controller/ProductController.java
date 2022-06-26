@@ -1,12 +1,16 @@
 package com.prograCol.controller;
 
-import com.prograCol.repository.dto.FilterDTO;
-import com.prograCol.repository.dto.RequestProductDTO;
+import com.prograCol.repository.dto.FilterDto;
+import com.prograCol.repository.dto.ObjectListDto;
+import com.prograCol.repository.dto.RequestProductDto;
 import com.prograCol.repository.entities.Product;
-import com.prograCol.services.ProductService;
+
+import com.prograCol.services.interfaces.ProductService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.prograCol.util.ConstantesMensaje.messageListData;
 
 @CrossOrigin(value = "*")
 @RestController()
@@ -27,77 +34,53 @@ public class ProductController {
 
     private Log LOG = LogFactory.getLog(ProductController.class);
     @Autowired
-    private ProductService productService;
+    private ProductService service;
 
     @GetMapping(value = "/product")
     @ResponseBody()
-    public Map<String, Object> getAllproducts (@RequestParam(name = "all", required = false) boolean all , @RequestParam(name = "page", required = false) Integer page, @RequestParam(name = "size", required = false) Integer size) {
-        try {
-            if (all) {
-                return UtilResponse.mapOk(productService.getAll());
-            } else {
-                return UtilResponse.mapOk(productService.getPagin(page, size));
-            }
-        } catch (Exception e) {
-            LOG.error("  ProductController  ->  getAllproducts  Fallo: ", e);
-            return UtilResponse.mapError("Ocurrio un error!: " + e.getMessage());
-        }
+    public ResponseEntity getAllproducts(@RequestParam(name = "all", required = false) boolean all
+                                        , @RequestParam(name = "page") Integer page
+                                        , @RequestParam(name = "size") Integer size) {
+        ObjectListDto response = service.getPagin(page, size);
+        return new ResponseEntity(new ResponseGeneralAPI<>(response.getData(), "Exito obteniendo los registros.", (int) response.getTotal()), HttpStatus.OK);
     }
 
     @PostMapping(value = "/product/filter")
     @ResponseBody
-    public Map<String, Object> filterProduct(@RequestBody FilterDTO filter) {
-        try {
-            return UtilResponse.mapOk(productService.getFilter(filter));
-        } catch (Exception e) {
-            LOG.error("  ProductController  ->  filterProduct  Fallo: ", e);
-            return UtilResponse.mapError("Ocurrio un error!: " + e.getMessage());
-        }
+    public ResponseEntity<ResponseGeneralAPI> filterProduct(@RequestBody @Valid FilterDto filter) {
+        return new ResponseEntity<>(new ResponseGeneralAPI(service.getFilter(filter), messageListData), HttpStatus.OK);
     }
 
     @PostMapping(value = "/product")
     @ResponseBody
-    public Map<String, Object> createProduct (@RequestBody RequestProductDTO body) {
-        try {
-            List<Product> insertProduct = productService.create(body.getProducts());
-            if (insertProduct.size() > 0) {
-                return UtilResponse.mapError(" Error insertando los registros", insertProduct);
-            } else {
-                return UtilResponse.mapOk(new ArrayList(0));
-            }
-        } catch (Exception e) {
-            LOG.error("  ProductController  ->  createProduct  Fallo: ", e);
-            return UtilResponse.mapError("Ocurrio un error!: " + e.getMessage());
+    public ResponseEntity<ResponseGeneralAPI> createProduct(@RequestBody RequestProductDto body) {
+        List<Product> insertProduct = service.create(body.getProducts());
+        if (insertProduct.isEmpty()) {
+            return new ResponseEntity<>(new ResponseGeneralAPI(null, "Se crearon los regitros."), HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(new ResponseGeneralAPI(insertProduct, "No se crearon los siguinetes registros."), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
     @PutMapping(value = "/product")
     @ResponseBody
-    public Map<String, Object> updateProduct(@RequestBody RequestProductDTO body) {
-        try {
-            List<Product> updateProduct = productService.update(body.getProducts());
-            if (updateProduct.size() > 0) {
-                return UtilResponse.mapError(" Error actualizando los registros", updateProduct);
-            } else {
-                return UtilResponse.mapOk(new ArrayList(0));
-            }
-        } catch (Exception e) {
-            LOG.error("  ProductController  ->  updateProduct  Fallo: ", e);
-            return UtilResponse.mapError("Ocurrio un error!: " + e.getMessage());
+    public ResponseEntity<ResponseGeneralAPI> updateProduct(@RequestBody RequestProductDto body) {
+        List<Product> updateProduct = service.update(body.getProducts());
+        if (updateProduct.isEmpty()) {
+            return new ResponseEntity<>(new ResponseGeneralAPI(null, "Se actualizaron los regitros."), HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(new ResponseGeneralAPI(updateProduct, "No se actualizaron los siguinetes registros."), HttpStatus.NOT_MODIFIED);
         }
     }
 
     @DeleteMapping(value = "/product")
     @ResponseBody
-    public Map<String, Object> deteleteProduct(@RequestBody RequestProductDTO body) {
-        try {
-            if (productService.delete(body.getProducts())) {
-                return UtilResponse.mapOk(new ArrayList(0));
-            }
-            return UtilResponse.mapOk(new ArrayList(0));
-        } catch (Exception e) {
-            LOG.error("  ProductController  ->  updateProduct  Fallo: ", e);
-            return UtilResponse.mapError("Ocurrio un error!: " + e.getMessage());
+    public ResponseEntity<ResponseGeneralAPI> deteleteProduct(@RequestBody RequestProductDto body) {
+        boolean isDelete = service.delete(body.getProducts());
+        if (isDelete) {
+            return new ResponseEntity<>(new ResponseGeneralAPI(null , "Se eliminaron los regitros."), HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<>(new ResponseGeneralAPI(null , "No se eliminaron los regitros."), HttpStatus.EXPECTATION_FAILED);
         }
     }
 }

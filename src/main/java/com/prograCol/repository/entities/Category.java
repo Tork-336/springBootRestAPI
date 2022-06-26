@@ -20,8 +20,8 @@ public class Category {
     private String description;
     @Column(name = "name")
     private String name;
-    @ManyToMany(mappedBy = "categorySet")
-    private Set<Product> productSet;
+    @ManyToMany(mappedBy = "categories")
+    private Set<Product> products;
 
     public Category() {
     }
@@ -50,11 +50,11 @@ public class Category {
         this.name = name;
     }
 
-    public Set getProductSet() {
-        return productSet;
+    public Set getProducts() {
+        return products;
     }
 
-    public void setProductSet(Set productSet) {
-        this.productSet = productSet;
+    public void setProducts(Set products) {
+        this.products = products;
     }
 }
