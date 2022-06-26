@@ -5,7 +5,6 @@ import com.prograCol.repository.ProductRepository;
 import com.prograCol.repository.dto.FilterDTO;
 import com.prograCol.repository.entities.Category;
 import com.prograCol.repository.entities.Product;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,10 +24,13 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     public List<Product> getAll() {
         List<Product> retorno = new ArrayList<>(0);
