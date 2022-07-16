@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -90,7 +89,6 @@ public class ProductServiceImp<T> implements ProductService {
 
     @Override
     public List<Product> create(List<Product> products) {
-        int indexSaveProducts = 0;
         products.stream().forEach(product -> {
             product.setCreationDate(LocalDateTime.now());
             product.setExpiryDate(LocalDateTime.now());
@@ -99,19 +97,11 @@ public class ProductServiceImp<T> implements ProductService {
             }
         });
         Iterator<Product> productsInsert = productRepository.saveAll(products).iterator();
+        List<Product> productsErrorInsert = new ArrayList<>(0);
         while (productsInsert.hasNext()) {
-            if (Objects.nonNull(productsInsert.next())) {
-                indexSaveProducts++;
-            }
+            productsErrorInsert.add(productsInsert.next());
         }
-        if (indexSaveProducts != products.size()) {
-            List<Product> productsErrorInsert = new ArrayList<>(0);
-            for (int i = 0; i < indexSaveProducts; i++) {
-                productsErrorInsert.add(products.get(i));
-            }
-            return productsErrorInsert;
-        }
-        return new ArrayList<>(0);
+        return productsErrorInsert.isEmpty() ? new ArrayList<>(0) : productsErrorInsert;
     }
 
     private Set<Category> findCategoryToPersistProduct(Product product) {

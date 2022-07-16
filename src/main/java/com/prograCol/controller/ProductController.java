@@ -42,13 +42,13 @@ public class ProductController {
                                         , @RequestParam(name = "page") Integer page
                                         , @RequestParam(name = "size") Integer size) {
         ObjectListDto response = service.getPagin(page, size);
-        return new ResponseEntity(new ResponseGeneralAPI<>(response.getData(), "Exito obteniendo los registros.", (int) response.getTotal()), HttpStatus.OK);
+        return new ResponseEntity(new ResponseGeneralAPI<>(response.getData(), "Exito obteniendo los registros.", (int) response.getTotal(), true), HttpStatus.OK);
     }
 
     @PostMapping(value = "/product/filter")
     @ResponseBody
     public ResponseEntity<ResponseGeneralAPI> filterProduct(@RequestBody @Valid FilterDto filter) {
-        return new ResponseEntity<>(new ResponseGeneralAPI(service.getFilter(filter), messageListData), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseGeneralAPI(service.getFilter(filter), messageListData, true), HttpStatus.OK);
     }
 
     @PostMapping(value = "/product")
@@ -56,9 +56,9 @@ public class ProductController {
     public ResponseEntity<ResponseGeneralAPI> createProduct(@RequestBody RequestProductDto body) {
         List<Product> insertProduct = service.create(body.getProducts());
         if (insertProduct.isEmpty()) {
-            return new ResponseEntity<>(new ResponseGeneralAPI(null, "Se crearon los regitros."), HttpStatus.CREATED);
+            return new ResponseEntity<>(new ResponseGeneralAPI(null, "Se crearon los regitros.", true), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(new ResponseGeneralAPI(insertProduct, "No se crearon los siguinetes registros."), HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(new ResponseGeneralAPI(insertProduct, "No se crearon los siguinetes registros.", false), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -67,9 +67,9 @@ public class ProductController {
     public ResponseEntity<ResponseGeneralAPI> updateProduct(@RequestBody RequestProductDto body) {
         List<Product> updateProduct = service.update(body.getProducts());
         if (updateProduct.isEmpty()) {
-            return new ResponseEntity<>(new ResponseGeneralAPI(null, "Se actualizaron los regitros."), HttpStatus.CREATED);
+            return new ResponseEntity<>(new ResponseGeneralAPI(null, "Se actualizaron los regitros.", false), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(new ResponseGeneralAPI(updateProduct, "No se actualizaron los siguinetes registros."), HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<>(new ResponseGeneralAPI(updateProduct, "No se actualizaron los siguinetes registros.", true), HttpStatus.NOT_MODIFIED);
         }
     }
 
@@ -78,9 +78,9 @@ public class ProductController {
     public ResponseEntity<ResponseGeneralAPI> deteleteProduct(@RequestBody RequestProductDto body) {
         boolean isDelete = service.delete(body.getProducts());
         if (isDelete) {
-            return new ResponseEntity<>(new ResponseGeneralAPI(null , "Se eliminaron los regitros."), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(new ResponseGeneralAPI(null , "Se eliminaron los regitros.", true), HttpStatus.ACCEPTED);
         } else {
-            return new ResponseEntity<>(new ResponseGeneralAPI(null , "No se eliminaron los regitros."), HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>(new ResponseGeneralAPI(null , "No se eliminaron los regitros.", false), HttpStatus.EXPECTATION_FAILED);
         }
     }
 }
