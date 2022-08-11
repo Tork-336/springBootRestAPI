@@ -9,7 +9,6 @@ import com.applicationAPI.repository.entities.Product;
 import com.applicationAPI.services.interfaces.ProductService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

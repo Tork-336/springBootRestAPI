@@ -2,6 +2,7 @@ package com.applicationAPI.controller;
 
 import com.applicationAPI.execption.BusinessLogicException;
 import com.applicationAPI.execption.ModelNotFoundExecption;
+import com.applicationAPI.execption.ValidateSession;
 import com.applicationAPI.repository.dto.ExceptionDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -20,6 +21,12 @@ import java.util.Objects;
 
 @RestControllerAdvice
 public class ExecptionController {
+
+    @ExceptionHandler(ValidateSession.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ExceptionDto handlerExceptionValidateSession(ValidateSession exception, WebRequest webRequest) {
+        return new ExceptionDto(LocalDateTime.now(), HttpStatus.FORBIDDEN.value(), exception.getMessage(), "Error validando session del usuario.");
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(value = HttpStatus.CREATED)

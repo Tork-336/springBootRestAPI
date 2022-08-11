@@ -22,18 +22,14 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRETKEYJWT.getBytes(StandardCharsets.UTF_8)).compact();
     }
 
-    public static LoginForm getToken(String token) {
+    public static LoginForm getToken(String token) throws JsonProcessingException {
         LoginForm userSesion = new LoginForm();
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(SECRETKEYJWT.getBytes(StandardCharsets.UTF_8))
-                    .parseClaimsJws(token)
-                    .getBody();
-            if (!claims.isEmpty()) {
-                userSesion = mapper.readValue(claims.get("sub").toString(), LoginForm.class);
-            }
-        } catch (Exception exception) {
-            throw new BusinessLogicException(" Error con el token.");
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRETKEYJWT.getBytes(StandardCharsets.UTF_8))
+                .parseClaimsJws(token)
+                .getBody();
+        if (!claims.isEmpty()) {
+            userSesion = mapper.readValue(claims.get("sub").toString(), LoginForm.class);
         }
         return userSesion;
     }
